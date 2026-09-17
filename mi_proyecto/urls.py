@@ -21,5 +21,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('encuestas/', include('encuestas.urls')),
-    path('', views.page, name="page"),
+   # path('', views.page, name="page"),
+    
 ]
