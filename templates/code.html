@@ -49,7 +49,12 @@
 <span class="absolute bg-surface-container-lowest px-3 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">o continúa con correo electrónico</span>
 </div>
 <!-- Form Fields -->
-<form class="flex flex-col gap-5" onsubmit="event.preventDefault();">
+<form  method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  {% if error %}
+    <p style="color:red">{{ error }}</p>
+  {% endif %}
+
 <!-- Email Field -->
 <div class="flex flex-col gap-1.5">
 <label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="email">
@@ -58,7 +63,7 @@
 </label>
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px] pointer-events-none">mail</span>
-<input class="w-full h-11 pl-11 pr-4 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all shadow-sm font-body-md text-body-md" id="email" placeholder="ejemplo@empresa.com" required="" type="email"/>
+<input name="username" class="w-full h-11 pl-11 pr-4 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all shadow-sm font-body-md text-body-md" id="email" placeholder="ejemplo@empresa.com" required="" type="text"/>
 </div>
 </div>
 <!-- Password Field -->
@@ -71,7 +76,7 @@
 </div>
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px] pointer-events-none">lock</span>
-<input class="w-full h-11 pl-11 pr-11 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all shadow-sm font-body-md text-body-md" id="password" placeholder="••••••••" required="" type="password"/>
+<input name="password" class="w-full h-11 pl-11 pr-11 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all shadow-sm font-body-md text-body-md" id="password" placeholder="••••••••" required="" type="password"/>
 <button aria-label="Mostrar u ocultar contraseña" class="absolute right-3.5 text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center p-1 rounded-lg" id="togglePassword" type="button">
 <span class="material-symbols-outlined text-[20px]" id="eyeIcon">visibility</span>
 </button>
