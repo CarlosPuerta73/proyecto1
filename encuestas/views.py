@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from utils import limpiar_texto
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, QueryDict
@@ -124,3 +124,8 @@ def musico_view(request):
             return JsonResponse(
                 {"status": "error", "message": "Músico   no encontrado"}
             )
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+    return redirect('login')
