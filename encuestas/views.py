@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.shortcuts import render, redirect
 
 from utils import limpiar_texto
@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, QueryDict
 import json
-from .models import Musician, Profesor
+from .models import Musician, Profesor, User
 
 # Create your views here.
 
@@ -27,11 +27,14 @@ def home_view(request):
     return render(request, 'home.html', contexto)
 
 def login_view(request):
+   
     if request.method == "POST":
         usuario_input = request.POST.get("username")
         password_input = request.POST.get("password")
-
-        user = authenticate(request, username=usuario_input, password = password_input)
+        print("Usuario y contraseña recibidos:", usuario_input, password_input)
+        #user = authenticate(request, username=usuario_input, password=password_input) 
+        user = User.objects.filter(username=usuario_input, password=password_input).first()
+        print(user)
         if user is not None:
             login(request, user)
             return redirect('home')
@@ -129,3 +132,59 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
     return redirect('login')
+
+def registrar_usuario_view(request):
+    return render(request, 'registrar_usuario.html')
+
+
+@csrf_exempt 
+def form_registrar_usuario_view(request):
+    print(request.POST);
+    print("-.--->", request.method)
+
+    if request.method == "POST":
+        print("Usuario......", request.POST)
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        password2 = request.POST.get("password2")
+
+        user = User.objects.filter(username=username).first()
+        print("---", user)
+        if user:
+            return JsonResponse({"status": "ok", "message": "Usuario ya esta registrado"})
+
+        print(username, password, password2)
+        user = User.objects.create(username=username, password=password)
+        print("Usuario creado:", user)
+        user.save()
+
+        #return JsonResponse({"status": "ok", "user_name": user.username })
+        return redirect('login')
+
+    if request.method == "GET":
+            print(request.GET)
+            user = User.objects.filter(username=request.GET.get("username"))
+            print(user)
+            data = []
+            for p in user:
+                data.append({"username": p.username, "password": p.password, "password2": p.password2})
+            return JsonResponse({"status": "ok", "message": data})
+    
+    if request.method == "PUT":
+        put_data = QueryDict(request.body)
+        username = put_data.get("username")
+        password = put_data.get("password")
+        password2 = put_data.get("password2")
+        print("paso al put", username, password, password2)
+        # Aquí podrías manejar la actualización de un usuario
+        user = User.objects.filter(username=username).first()
+        print("---", user)
+        if user:
+            user.password = password
+            user.password2 = password2
+            user.save()
+            return JsonResponse({"status": "ok", "message": "Usuario actualizado"})
+        else:
+            return JsonResponse(
+                {"status": "error", "message": "Usuario   no encontrado"}
+            )

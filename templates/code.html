@@ -105,9 +105,10 @@
 <!-- Bottom Switch to Register -->
 <div class="mt-6 text-center">
 <span class="font-body-md text-body-md text-on-surface-variant">¿No tienes una cuenta?</span>
-<a class="font-label-md text-label-md text-primary hover:text-on-primary-fixed-variant font-semibold ml-1.5 transition-colors hover:underline" href="#">
-              Regístrate gratis
-            </a>
+<form action="{% url 'registrar_usuario' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Registra Usuario</button>
+</form>
 </div>
 </div>
 </div>
